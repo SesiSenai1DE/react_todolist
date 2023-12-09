@@ -1,5 +1,9 @@
-import { useState } from 'react'
+import { useState } from 'react';
+
+import Todo from './Components/Todo';
+
 import "./App.css";
+import TodoForm from './components/TodoForm';
 
 
 function App() {
@@ -21,23 +25,34 @@ function App() {
 
   ]);
 
+  const addTodo = (text, category) => {
+    const newTodos = [...todos, 
+      { id: Math.floor(Math.random() * 1000), text, category, isCompleted: false }
+    ];
+    setTodos(newTodos);
+  };
+
+  const removeTodo = (id) => {
+    const newTodos = [...todos];
+    const filteredTodos = newTodos.filter((todo) => todo.id !== id ?  todo : null)
+    setTodos(filteredTodos);
+  };
+
+  const completeTodo = (id) => {
+    const newTodos = [...todos];
+    newTodos.map((todo) => todo.id === id ?  todo.isCompleted = !todo.isCompleted : todo)
+    setTodos(newTodos);
+  };
+
   return (
   <div className='app'>
     <h1>Lista de Tarefas</h1>
     <div className='todo-list'>
       {todos.map((todo)=>(
-        <div className='todo'>
-          <div className='content'>
-            <p>{todo.text}</p>
-            <p className='category'>({todo.category})</p>
-          </div>
-          <div>
-            <button>Completar</button>
-            <button>X</button>
-          </div>
-        </div>  
+        <Todo key={todo.id} todo={todo} removeTodo={removeTodo} completeTodo={completeTodo} />
       ))}
     </div>
+    <TodoForm addTodo={addTodo} />
   </div>
   )
 }
